@@ -1,11 +1,29 @@
+import requests
+import json
+
 import telebot
 from telebot import types
 
-from settings import token, vk, youtube
+from settings import vk, youtube, key
 
 
 def telegram_bot(token):
     bot = telebot.TeleBot(token)
+
+    @bot.message_handler(commands=['get_weather', 'pogoda'])
+    def get_weather(message):
+        url = 'https://api.weather.yandex.ru/v2/informers??lat=44.600513&lon=41.962367&lang=ru_RU'
+        headers = {'X-Yandex-API-Key': key}
+
+        r = requests.get(url=url, headers=headers)
+
+        if r.status_code == 200:
+            data = json.loads(r.text)
+            fact = data["fact"]
+            bot.send_message(message.chat.id,
+                             text=f'Сейчас температура в Невинномысске {fact["temp"]}°, ощущается как {fact["feels_like"]}°. Погода на улице {fact["condition"]}')
+        else:
+            bot.send_message(message.chat.id, 'Ошибка в работе API')
 
     @bot.message_handler(commands=['start'])
     def start_message(message):
@@ -15,7 +33,7 @@ def telegram_bot(token):
     def button_message(message):
         markup = types.InlineKeyboardMarkup(row_width=2)
         item1 = types.InlineKeyboardButton('Скачать видео с вконтакте', callback_data='vk')
-        item2 = types.InlineKeyboardButton('Скачать видео с YouTube', callback_data='yotube')
+        item2 = types.InlineKeyboardButton('Скачать видео с YouTube', callback_data='youtube')
 
         markup.add(item1, item2)
 
@@ -26,7 +44,7 @@ def telegram_bot(token):
         if call.message:
             if call.data == 'vk':
                 bot.send_message(call.message.chat.id, vk)
-            elif call.data == 'yotube':
+            elif call.data == 'youtube':
                 bot.send_message(call.message.chat.id, youtube)
 
     @bot.message_handler(content_types='text')
@@ -37,7 +55,3 @@ def telegram_bot(token):
             bot.send_message(message.chat.id, youtube)
 
     bot.infinity_polling()
-
-
-if __name__ == '__main__':
-    telegram_bot(token)

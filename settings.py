@@ -8,3 +8,5 @@ token = os.getenv('TOKEN')
 vk = os.getenv('VK')
 
 youtube = os.getenv('YOUTUBE')
+
+key = os.getenv('KEY')
