@@ -1,0 +1,8 @@
+[flake8]
+ignore = D203
+exclude = venv,.git,__pycache__,docs/source/conf.py,old,build,dist,*/tests,*/migrations/*,*/tests/*
+max-complexity = 10
+max-line-length = 120
+per-file-ignores =
+    # imported but unused
+    __init__.py: F401

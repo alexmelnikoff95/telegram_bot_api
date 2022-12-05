@@ -1,6 +1,4 @@
-from settings import token
-from telegram_api import telegram_bot
-
+from telegram_api import start_bot
 
 if __name__ == '__main__':
-    telegram_bot(token)
+    start_bot()

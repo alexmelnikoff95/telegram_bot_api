@@ -1,0 +1,13 @@
+version: "3.9"
+
+services:
+  bot:
+    image: alexmelnikoff95/bot_api:latest
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - ./compose.env
+
+

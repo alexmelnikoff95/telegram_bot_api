@@ -1,12 +1,18 @@
-import os
-from dotenv import load_dotenv
+from pydantic import BaseSettings, AnyHttpUrl
+from pydantic.tools import lru_cache
 
-load_dotenv()
 
-token = os.getenv('TOKEN')
+class Settings(BaseSettings):
+    token: str
+    vk: AnyHttpUrl
+    youtube: AnyHttpUrl
+    key: str
 
-vk = os.getenv('VK')
+    class Config:
+        env_file = '.env'
+        env_file_encoding = 'utf-8'
 
-youtube = os.getenv('YOUTUBE')
 
-key = os.getenv('KEY')
+@lru_cache
+def settings():
+    return Settings()
