@@ -52,10 +52,15 @@ class Weather(BaseModel):
 
 
 def weather(message) -> Weather:
-    if message.text.lower() == '/get_weather':
-        url = 'https://api.weather.yandex.ru/v2/informers?lat=44.600513&lon=41.962367&lang=ru_RU'
-    else:
-        url = 'https://api.weather.yandex.ru/v2/informers?lat=55.0794&lon=38.7783&lang=ru_RU'
+    match message.text.lower():
+        case '/get_weather':
+            url = 'https://api.weather.yandex.ru/v2/informers?lat=44.600513&lon=41.962367&lang=ru_RU'
+        case '/kolomna':
+            url = 'https://api.weather.yandex.ru/v2/informers?lat=55.0794&lon=38.7783&lang=ru_RU'
+        case 'moscow_home':
+            url = 'https://api.weather.yandex.ru/v2/informers?lat=55.712750&lon=37.803810&lang=ru_RU',
+        case _:
+            raise WeatherError
 
     headers = {'X-Yandex-API-Key': settings().key}
     request_server = requests.get(url=url, headers=headers)
@@ -67,39 +72,3 @@ def weather(message) -> Weather:
     fact = data["fact"]
 
     return Weather.parse_obj(fact)
-
-
-# def weather_forecast(message) -> WeatherForecast:
-#     if message.text.lower() == '/prognoz':
-#         url = 'https://api.weather.yandex.ru/v2/informers?lat=44.600513&lon=41.962367&lang=ru_RU'
-#     else:
-#         url = 'https://api.weather.yandex.ru/v2/informers?lat=55.0794&lon=38.7783&lang=ru_RU'
-#
-#     headers = {'X-Yandex-API-Key': settings().key}
-#     request_server = requests.get(url=url, headers=headers)
-#
-#     if not request_server.ok:
-#         raise WeatherError('Ошибка API')
-#
-#     data = request_server.json()
-#     forecast = data['forecast']['parts'][0]
-#
-#     return WeatherForecast.parse_obj(forecast)
-
-
-# def weather_forecast_data(message) -> WeatherForecastDate:
-#     if message.text.lower() == '/prognoz':
-#         url = 'https://api.weather.yandex.ru/v2/informers?lat=44.600513&lon=41.962367&lang=ru_RU'
-#     else:
-#         url = 'https://api.weather.yandex.ru/v2/informers?lat=55.0794&lon=38.7783&lang=ru_RU'
-#
-#     headers = {'X-Yandex-API-Key': settings().key}
-#     request_server = requests.get(url=url, headers=headers)
-#
-#     if not request_server.ok:
-#         raise WeatherError('Ошибка API')
-#
-#     data = request_server.json()
-#     forecast = data['forecast']
-#
-#     return WeatherForecastDate.parse_obj(forecast)

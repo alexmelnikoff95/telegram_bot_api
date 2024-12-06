@@ -24,20 +24,6 @@ def get_weather(message):
     except WeatherError as e:
         bot.send_message(message.chat.id, str(e))
 
-    # @bot.message_handler(commands=['prognoz'])
-    # def get_weather_forecast(message):
-    #     forecast = weather_forecast(message)
-    #     a = weather_forecast_data(message)
-    #     try:
-    #         bot.send_message(
-    #             message.chat.id,
-    #             text=f'Сейчас температура в Невинномысске {a.date}°,'
-    #                  f'температура {forecast.temp_min}°. '
-    #                  f'Погода на улице {forecast.temp_max}. '
-    #                  f'Погода на улице {forecast.temp_avg}. '
-    #         )
-    #     except WeatherError as e:
-    #         bot.send_message(message.chat.id, str(e))
 
 @bot.message_handler(commands=['kolomna'])
 def get_weather_in_kolomna(message):
@@ -47,6 +33,22 @@ def get_weather_in_kolomna(message):
             message.chat.id,
 
             text=f'Сейчас температура в Коломне {fact.temp}°, '
+                 f'ощущается как {fact.feels_like}°. '
+                 f'Погода на улице {fact.verbose_condition}. '
+                 f'Скорость ветра {fact.wind_speed} М/С. '
+                 f'Влажность воздуха {fact.humidity} %.'
+        )
+    except WeatherError as e:
+        bot.send_message(message.chat.id, str(e))
+
+
+@bot.message_handler(commands=['moscow_home'])
+def get_weather(message):
+    fact = weather(message)
+    try:
+        bot.send_message(
+            message.chat.id,
+            text=f'Сейчас температура в Невинномысске {fact.temp}°,'
                  f'ощущается как {fact.feels_like}°. '
                  f'Погода на улице {fact.verbose_condition}. '
                  f'Скорость ветра {fact.wind_speed} М/С. '
